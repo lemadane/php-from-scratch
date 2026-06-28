@@ -1,0 +1,85 @@
+# Composer dependencies
+
+/vendor/
+
+# Composer lock file
+
+# Keep this for applications if you want repeatable installs.
+
+# Ignore it only for reusable libraries.
+
+# composer.lock
+
+# Environment files
+
+.env
+.env.local
+.env.*.local
+
+# SQLite database files
+
+/storage/*.sqlite
+/storage/*.sqlite3
+/storage/*.db
+/storage/*.db-journal
+/storage/*.sqlite-journal
+/storage/*.sqlite3-journal
+
+# Keep storage folder structure
+
+!/storage/.gitkeep
+
+# Logs
+
+*.log
+/logs/
+/storage/logs/
+
+# Cache files
+
+/cache/
+/storage/cache/
+
+# Runtime files
+
+/tmp/
+/storage/tmp/
+
+# PHPUnit
+
+.phpunit.result.cache
+/coverage/
+
+# PHPStan / Psalm / static analysis cache
+
+.phpstan.cache
+/psalm.xml
+/.psalm/cache/
+
+# IDE and editor files
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+
+# OS files
+
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+
+/build/
+/dist/
+
+# Backup files
+
+*.bak
+*.swp
+*.swo
+*~
+
+# Local server files
+
+.php-server
