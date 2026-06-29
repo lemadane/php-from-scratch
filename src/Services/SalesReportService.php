@@ -6,44 +6,24 @@ namespace Karinderya\Services;
 
 use Karinderya\Models\MenuItem;
 
+// This class is responsible for generating sales reports based on the sales data and menu items.
 final class SalesReportService {
-   /**
-    * Convert menu item array into a searchable associative array.
-    *
-    * Example result:
-    *
-    * [
-    *     'PORK-ADOBO' => MenuItem,
-    *     'RICE' => MenuItem
-    * ]
-    *
-    * @param array<int, MenuItem> $menuItems
-    *
-    * @return array<string, MenuItem>
-    */
-   public function buildMenuIndex(array $menuItems): array {
-      $menuIndex = [];
+   
+   // This method converts an array of MenuItem objects into an associative array indexed by the menu 
+   // item code.
+   public function toIndexedMenu(array $menuItems): array {
+      $toIndexedMenuItems = [];
       foreach ($menuItems as $menuItem) {
-         $menuIndex[$menuItem->code()] = $menuItem;
+         $toIndexedMenuItems[$menuItem->code()] = $menuItem;
       }
-      return $menuIndex;
+      return $toIndexedMenuItems;
    }
 
-   /**
-    * @param array<int, array{
-    *     receipt_no: string,
-    *     cashier: string,
-    *     items: array<int, array{
-    *         code: string,
-    *         quantity: int
-    *     }>
-    * }> $sales
-    *
-    * @param array<string, MenuItem> $menuIndex
-    */
+   // This method prints a detailed sales report for each receipt, including the items sold 
+   // and their totals. 
    public function printReceiptReport(
       array $sales,
-      array $menuIndex): void {
+      array $indexedMenu): void {
       echo PHP_EOL;
       echo "KARINDERYA SALES REPORT" . PHP_EOL;
       echo "=======================" . PHP_EOL;
@@ -60,7 +40,7 @@ final class SalesReportService {
                echo "- Unknown item code: {$code}" . PHP_EOL;
                continue;
             }
-            $menuItem = $menuIndex[$code];
+            $menuItem = $indexedMenu[$code];
             $lineTotal = $menuItem->price() * $quantity;
             $receiptTotal += $lineTotal;
             echo sprintf(
@@ -76,49 +56,26 @@ final class SalesReportService {
       }
    }
 
-   /**
-    * @param array<int, array{
-    *     receipt_no: string,
-    *     cashier: string,
-    *     items: array<int, array{
-    *         code: string,
-    *         quantity: int
-    *     }>
-    * }> $sales
-    *
-    * @param array<string, MenuItem> $menuIndex
-    */
+   // This method calculates the grand total of all sales by iterating through each sale 
+   // and summing up the total for each sold item based on its price and quantity.
    public function calculateGrandTotal(
       array $sales,
-      array $menuIndex): float {
+      array $indexedMenu): float {
       $grandTotal = 0.00;
       foreach ($sales as $sale) {
          foreach ($sale['items'] as $soldItem) {
             $code = $soldItem['code'];
             $quantity = $soldItem['quantity'];
-            if (!isset($menuIndex[$code])) {
+            if (!isset($indexedMenu[$code])) {
                continue;
             }
-            $grandTotal += $menuIndex[$code]->price() * $quantity;
+            $grandTotal += $indexedMenu[$code]->price() * $quantity;
          }
       }
       return $grandTotal;
    }
 
-   /**
-    * Count total quantity sold per item.
-    *
-    * @param array<int, array{
-    *     receipt_no: string,
-    *     cashier: string,
-    *     items: array<int, array{
-    *         code: string,
-    *         quantity: int
-    *     }>
-    * }> $sales
-    *
-    * @return array<string, int>
-    */
+   // This method counts the total quantity sold for each menu item across all sales.
    public function countSoldItems(array $sales): array {
       $soldItems = [];
       foreach ($sales as $sale) {
@@ -134,10 +91,8 @@ final class SalesReportService {
       return $soldItems;
    }
 
-   /**
-    * @param array<string, int> $soldItems
-    * @param array<string, MenuItem> $menuIndex
-    */
+   // This method prints a summary of sold items, showing the total quantity sold for each item,
+   // sorted in descending order of quantity sold.
    public function printSoldItemSummary(
       array $soldItems,
       array $menuIndex): void {
@@ -146,10 +101,10 @@ final class SalesReportService {
       echo "=================" . PHP_EOL;
       arsort($soldItems); // Sort the sold items in descending order based on quantity sold
       foreach ($soldItems as $code => $quantity) {
-         if (!isset($menuIndex[$code])) { // isset() check to avoid undefined index error
+         if (!isset($menuIndex[$code])) { // isseet check if the menu item exists in the indexed menu
             continue;
          }
-         echo sprintf(
+         echo sprintf(  // in Java this is similar to String.format()
             "%s: %d sold",
             $menuIndex[$code]->name(),
             $quantity
@@ -157,9 +112,7 @@ final class SalesReportService {
       }
    }
 
-   /**
-    * @param array<int, MenuItem> $menuItems
-    */
+   // This method groups menu items by their category and prints them in a structured format.
    public function printMenuByCategory(array $menuItems): void {
       $groupedItems = [];
       foreach ($menuItems as $menuItem) {
