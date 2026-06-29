@@ -6,12 +6,10 @@ namespace Karinderya\Repositories;
 
 use Karinderya\Models\MenuItem;
 
+// This class serves as a repository for sales data and menu items, 
+// providing methods to retrieve them.
 final class SalesRepository {
-   /**
-    * Indexed array of objects.
-    *
-    * @return array<int, MenuItem>
-    */
+   
    public function menuItems(): array {
       return [
          new MenuItem('PORK-ADOBO', 'Pork Adobo', 75.00, 'Ulam'),
@@ -23,21 +21,9 @@ final class SalesRepository {
       ];
    }
 
-   /**
-    * Multi-dimensional associative array.
-    *
-    * @return array<int, array{
-    *     receipt_no: string,
-    *     cashier: string,
-    *     items: array<int, array{
-    *         code: string,
-    *         quantity: int
-    *     }>
-    * }>
-    */
    public function sales(): array {
       return [
-         [
+         'OR-0001' => [
             'receipt_no' => 'OR-0001',
             'cashier' => 'Maria',
             'items' => [
@@ -46,7 +32,7 @@ final class SalesRepository {
                ['code' => 'COKE', 'quantity' => 1],
             ],
          ],
-         [
+         'OR-0002' => [
             'receipt_no' => 'OR-0002',
             'cashier' => 'Ben',
             'items' => [
@@ -55,7 +41,7 @@ final class SalesRepository {
                ['code' => 'WATER', 'quantity' => 1],
             ],
          ],
-         [
+         'OR-0003' => [
             'receipt_no' => 'OR-0003',
             'cashier' => 'Maria',
             'items' => [
